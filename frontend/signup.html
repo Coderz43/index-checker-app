@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign Up - IndexCheckr</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: #f6f7fb;
+    }
+
+    /* HEADER */
+    .header {
+      background: linear-gradient(90deg, #0f1c2e, #1a2950);
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 40px;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .header-left img {
+      height: 28px;
+    }
+
+    .header-left span {
+      font-weight: 600;
+      font-size: 20px;
+    }
+
+    .header-right {
+      font-size: 14px;
+    }
+
+    .header-right a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      margin-left: 6px;
+    }
+
+    /* FORM */
+    .form-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding-top: 40px;
+    }
+
+    .form-box {
+      background-color: white;
+      padding: 40px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+      width: 100%;
+      max-width: 300px;
+    }
+
+    .form-title {
+      text-align: center;
+      margin-bottom: 24px;
+      font-size: 24px;
+      font-weight: 600;
+      color: #1c1c1c;
+    }
+
+    .form-box input[type="text"],
+    .form-box input[type="email"],
+    .form-box input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 16px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+
+    .form-box button {
+      background-color: #6d9800;
+      color: white;
+      border: none;
+      width: 100%;
+      padding: 12px;
+      font-weight: bold;
+      font-size: 14px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .form-box button:hover {
+      background-color: #5a8200;
+    }
+
+    .terms-text {
+      text-align: center;
+      font-size: 12px;
+      margin-top: 12px;
+    }
+
+    .terms-text a {
+      color: #003366;
+      text-decoration: none;
+    }
+
+    .terms-text a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div style="font-size: 1.5rem; font-weight: bold;">
+    <a href="index.html" style="color: white; text-decoration: none;">✅ IndexCheckr</a>
+  </div>
+    <div class="header-right">
+      ALREADY HAVE AN ACCOUNT?
+      <a href="signin.html">SIGN IN</a>
+    </div>
+  </header>
+
+  <!-- FORM -->
+  <div class="form-container">
+    <form class="form-box">
+      <h2 class="form-title">Sign Up</h2>
+
+      <input type="email" placeholder="Email" required>
+      <input type="text" placeholder="First Name" required>
+      <input type="text" placeholder="Last Name" required>
+      <input type="password" placeholder="Password" required>
+      <input type="password" placeholder="Confirm Password" required>
+
+      <button type="submit">SIGN UP</button>
+
+      <p class="terms-text">By signing up, you agree to our <a href="#">Terms of Service</a></p>
+    </form>
+  </div>
+
+</body>
+</html>
+<script>
+  document.querySelector("form").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const inputs = e.target.querySelectorAll("input");
+
+    // ✅ Client-side password confirmation check
+    if (inputs[3].value !== inputs[4].value) {
+      alert("Passwords do not match.");
+      return;
+    }
+
+    const data = {
+      email: inputs[0].value,
+      first_name: inputs[1].value,
+      last_name: inputs[2].value,
+      password: inputs[3].value
+    };
+
+    try {
+      const res = await fetch("http://localhost:5000/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+
+      const result = await res.json();
+
+      if (res.ok) {
+        alert(result.message || "Signup successful! Please check your email.");
+      } else {
+        alert(result.error || "Signup failed. Please try again.");
+      }
+
+    } catch (err) {
+      alert("Something went wrong. Please try again later.");
+    }
+  });
+</script>
+
+
+

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Next Index Checker</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+<header class="site-header">
+  <!-- Top Row: Logo + Hamburger -->
+  <div class="top-row">
+    <div style="font-size: 1.5rem; font-weight: bold;">
+      <a href="index.html" style="color: white; text-decoration: none; text-shadow: 0 0 2px #000;">✅ IndexCheckr</a>
+    </div>
+    <div class="hamburger" onclick="toggleMobileNav()">☰</div>
+  </div>
+
+  <!-- Nav Links (Shared for Desktop + Mobile) -->
+  <div class="nav-wrapper" id="mobile-nav">
+    <nav class="main-nav">
+      <a href="index.html#features">FEATURES</a>
+      <a href="index.html#pricing">PRICING</a>
+      <a href="index.html#faq">FAQ</a>
+      <a href="resources.html">RESOURCES</a>
+      <a href="index.html#extension">CHROME EXTENSION</a>
+      <a href="signin.html" class="mobile-signin-link">SIGN IN</a> <!-- Only visible on mobile -->
+    </nav>
+  </div>
+
+  <!-- Desktop SIGN IN (right side) -->
+  <div class="signin-wrapper">
+    <a href="signin.html" style="background-color: #00ff9d; color: #0f1c2e; padding: 0.4rem 1rem; border-radius: 5px; font-weight: bold; text-decoration: none; box-shadow: 0 0 5px #00ff9d;">SIGN IN</a>
+  </div>
+</header>
+<section class="hero">
+  <h1>Check Google Index Status</h1>
+  <p>Verify if your links are indexed with fast fallback API switching</p>
+  <div class="form-box">
+    <label style="display:block; margin-bottom:8px;">Or upload CSV file with links:</label>
+    <input type="file" id="csvFile" accept=".csv" onchange="handleCSV(event)" style="max-width:400px;margin:auto;display:block;margin-bottom:20px;">
+    <input type="text" id="urlInput" placeholder="Please enter URLs(one per line or space-separated)" />
+    <button onclick="checkIndex()">Check</button>
+  </div>
+ <div id="resultCard" style="display: none;">
+  <div class="result-card">
+    <p id="result"></p>
+  </div>
+</div>
+
+</section>
+
+<!-- Why Choose Us -->
+<section id="features" style="background: linear-gradient(135deg, #0f1c2e, #1a2950); padding: 3rem 1rem; color: white;">
+  <h2 style="text-align: center; margin-bottom: 2.5rem;">Why Choose Us?</h2>
+  <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+    <div class="feature-card">
+      <h3>🔍 Smart Search</h3>
+      <p>Uses Google’s latest programmable search for accurate results.</p>
+    </div>
+    <div class="feature-card">
+      <h3>🧩 Auto Fallback</h3>
+      <p>If one key fails, another takes over instantly.</p>
+    </div>
+    <div class="feature-card">
+      <h3>📁 Bulk Tools</h3>
+      <p>Upcoming: check CSV uploads with thousands of links.</p>
+    </div>
+  </div>
+</section>
+<!-- Credit Plans -->
+<section id="pricing" style="background: linear-gradient(135deg, #0f1c2e, #1a2950); padding: 1rem 1rem; color: white;">
+  <h2 style="text-align: center; margin-bottom: 1rem;">Credit Plans</h2>
+  <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+    <a href="credit.html" style="text-decoration: none;">
+      <div class="plan-card">
+        <h3>Starter</h3>
+        <p>$10 – 1,000 credits</p>
+      </div>
+    </a>
+    <a href="credit.html" style="text-decoration: none;">
+      <div class="plan-card">
+        <h3>Pro</h3>
+        <p>$50 – 7,500 credits</p>
+      </div>
+    </a>
+    <a href="credit.html" style="text-decoration: none;">
+      <div class="plan-card">
+        <h3>Expert</h3>
+        <p>$150 – 30,000 credits</p>
+      </div>
+    </a>
+  </div>
+</section>
+<section class="credit-info-section" style="padding: 50px 20px; max-width: 1100px; margin: auto; font-family: Arial, sans-serif;">
+  <h2 style="text-align:center; margin-bottom: 30px; color: #0f172a;">Why Use IndexCheckr’s Credit-Based Plans?</h2>
+
+  <p style="font-size: 16px; line-height: 1.7; color: #444;">
+    IndexCheckr puts you in full control of your indexing strategy. Whether you're auditing thousands of URLs, managing client campaigns, or monitoring blog visibility — every credit counts, and every result is real-time.
+  </p>
+
+  <h3 style="margin-top: 40px; color: #0f172a;">🚀 Supercharge Your Index Tracking with Precision</h3>
+  <p style="font-size: 16px; line-height: 1.7; color: #444;">
+    With IndexCheckr’s flexible credit plans, you only pay for what you check. No subscriptions. No overages. Just accurate indexing feedback on demand.
+  </p>
+  <ul style="padding-left: 20px; color: #444;">
+    <li>📌 No wasted credits — only real checks performed</li>
+    <li>🧱 No monthly lock-ins or confusing upgrade traps</li>
+    <li>💡 Transparent tracking and pay-as-you-grow freedom</li>
+  </ul>
+  <p style="font-weight: bold; color: #0f172a;">Simple, efficient, scalable.</p>
+
+  <h3 style="margin-top: 40px; color: #0f172a;">🧪 What Makes IndexCheckr Unique?</h3>
+  <ul style="padding-left: 20px; color: #444;">
+    <li>🟢 <strong>Live Google Index Checks</strong> — Uses actual <code>site:</code> queries for each URL.</li>
+    <li>🟢 <strong>Bulk File Upload Support</strong> — Upload lists of any size with results within seconds.</li>
+    <li>🟢 <strong>Fallback-Enabled API System</strong> — Never experience downtime or query limits again.</li>
+  </ul>
+
+  <h3 style="margin-top: 40px; color: #0f172a;">🔍 What to Look for in an Index Checker?</h3>
+  <p style="font-size: 16px; line-height: 1.7; color: #444;">
+    Many tools offer index checking — but few offer clarity. IndexCheckr ensures results are actionable, exportable, and delivered instantly without daily caps or throttling.
+  </p>
+  <p style="font-weight: bold; color: #0f172a;">If you rely on Google visibility — we’ve got you covered.</p>
+
+  <h3 style="margin-top: 40px; color: #0f172a;">🛡️ Built for SEO Professionals</h3>
+  <ul style="padding-left: 20px; color: #444;">
+    <li>✅ Track URLs, sitemaps, and backlinks easily</li>
+    <li>✅ Know exactly how many credits you’ve used</li>
+    <li>✅ Clear “Indexed” or “Not Indexed” results with zero guesswork</li>
+  </ul>
+  <p style="font-size: 16px; line-height: 1.7; color: #444;">
+    Whether you’re running campaigns, selling expired domains, or scaling your web assets — IndexCheckr gives you peace of mind in a single click.
+  </p>
+</section>
+<section id="faq" class="faq-section">
+  <h2>Frequently Asked Questions</h2>
+  <div class="faq-inner">
+    <details><summary>🔐 Do I need an API key?</summary>
+      <p>Yes, Google Programmable Search API requires an API key and a Search Engine ID (CX).</p>
+    </details>
+    <details><summary>💳 What payment methods do you accept?</summary>
+      <p>We accept PayPal, Credit/Debit Cards, and Crypto for subscription purchases.</p>
+    </details>
+    <details><summary>🎯 Are the results 100% accurate?</summary>
+      <p>We use Google's official API, so the results are accurate and real-time based on your query.</p>
+    </details>
+    <details><summary>🔄 What if a key is blocked?</summary>
+      <p>Our system automatically switches to the next API key in the fallback list — no action needed from you.</p>
+    </details>
+  </div>
+</section>
+<!-- ✅ Footer -->
+<footer style="background-color: #111; color: white; padding: 40px 20px; text-align: center;">
+  <div style="
+    max-width: 1200px;
+    margin: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    gap: 30px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  ">
+    <!-- Brand Info -->
+    <div style="flex: 1 1 200px; min-width: 250px;">
+      <h3 style="color: #00d26a;">✔ IndexCheckr</h3>
+      <p style="font-size: 14px;">Track and manage Google indexing for your URLs and backlinks with bulk checks, recurring monitoring, and detailed reports.</p>
+      <div style="margin-top: 10px;">
+        <img src="https://img.icons8.com/ios-filled/20/ffffff/twitterx.png" alt="X" style="margin: 0 5px;">
+        <img src="https://img.icons8.com/ios-filled/20/ffffff/linkedin.png" alt="LinkedIn" style="margin: 0 5px;">
+        <img src="https://img.icons8.com/ios-filled/20/00d26a/star.png" alt="Stars" style="margin: 0 5px;">
+        <span style="background-color: #002a4d; padding: 4px 10px; border-radius: 6px; margin-left: 5px;">Capterra ⭐ 5</span>
+      </div>
+    </div>
+
+    <!-- Links -->
+    <div style="flex: 1 1 150px; min-width: 150px;">
+      <h4 style="color: #ffffff;">Links</h4>
+      <ul style="list-style: none; padding: 0; font-size: 14px; line-height: 24px;">
+        <li><a href="#features" style="color: #ccc; text-decoration: none;">Noindex Checker</a></li>
+        <li><a href="#faq" style="color: #ccc; text-decoration: none;">Resources</a></li>
+        <li><a href="#chrome" style="color: #ccc; text-decoration: none;">Chrome Extension</a></li>
+        <li><a href="#" style="color: #ccc; text-decoration: none;">Blog</a></li>
+        <li><a href="#" style="color: #ccc; text-decoration: none;">Affiliate</a></li>
+      </ul>
+    </div>
+
+    <!-- Company -->
+    <div style="flex: 1 1 200px; min-width: 200px;">
+      <h4 style="color: #ffffff;">Company</h4>
+      <p style="font-size: 14px; line-height: 22px;">
+        LinkStorm<br>
+        Lahore, Pakistan<br><br>
+        <a href="mailto:support@nextindex.io" style="color: #00d26a;">support@nextindex.io</a>
+      </p>
+    </div>
+  </div>
+
+  <hr style="border: 0.5px solid #444; margin: 30px 0;">
+  <p style="font-size: 13px; color: #ccc;">
+    © 2025 NextIndex — Built with ❤️ for SEOs —
+    <a href="#" style="color: #00d26a;">Terms of Use & Privacy</a>
+  </p>
+</footer>
+
+<!-- Loader -->
+<div id="loader" style="
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(15,28,46,0.8);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+">
+  <div style="position: relative; width: 120px; height: 120px; display: flex; align-items: center; justify-content: center;">
+    <div style="
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 6px solid #222;
+      border-top: 6px solid #00ff9d;
+      animation: spin 1s linear infinite;
+    "></div>
+    <div style="
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      color: #00ff9d;
+      font-weight: bold;
+      font-size: 16px;
+      font-family: monospace;
+      text-shadow: 0 0 3px #00ff9d;
+    ">LOADING</div>
+  </div>
+</div>
+
+
+<script src="script.js"></script>
+<script>
+  function toggleMobileNav() {
+    const nav = document.querySelector('.nav-wrapper nav');
+    nav.classList.toggle('show');
+  }
+</script>
+
+
+
+</body>
+</html>

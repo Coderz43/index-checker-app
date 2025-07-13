@@ -1,0 +1,577 @@
+/* GLOBAL STYLES */
+body {
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #fdfdfd;
+  color: #222;
+}
+body > .goog-te-banner-frame.skiptranslate {
+  display: none !important;
+}
+body {
+  top: 0px !important;
+}
+.goog-tooltip,
+.goog-tooltip:hover,
+.goog-text-highlight {
+  display: none !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* HEADER STYLES */
+.main-header {
+  background-color: #0a2c6b;
+  padding: 15px 30px;
+  color: white;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+.site-header {
+  background: linear-gradient(90deg, #0f1c2e, #1a2950);
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: white;
+  position: relative;
+  flex-wrap: wrap;
+}
+.container {
+  max-width: 1300px;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.logo-area {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.logo-img {
+  width: 30px;
+  height: auto;
+}
+.logo-text {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #ffffff;
+}
+.main-nav {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.main-nav a {
+  color: white;
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 14px;
+}
+.main-nav a:hover {
+  text-decoration: underline;
+}
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+}
+.sign-in-btn {
+  padding: 6px 14px;
+  font-weight: bold;
+  background-color: white;
+  color: #0a2c6b;
+  border: 2px solid white;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.sign-in-btn:hover {
+  background-color: #f1f1f1;
+}
+.hamburger {
+  display: none;
+  font-size: 28px;
+  color: white;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+/* FLAG DROPDOWN */
+.language-dropdown {
+  position: relative;
+}
+.lang-toggle {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.lang-toggle img {
+  margin-right: 6px;
+  border-radius: 2px;
+}
+.arrow {
+  margin-left: 4px;
+  font-size: 10px;
+}
+.lang-options {
+  position: absolute;
+  top: 36px;
+  right: 0;
+  background: white;
+  color: #111;
+  list-style: none;
+  padding: 10px;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  display: none;
+  z-index: 999;
+  width: 160px;
+}
+.lang-options li {
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+.lang-options li:hover {
+  background-color: #f1f1f1;
+}
+.language-dropdown:hover .lang-options {
+  display: block;
+}
+
+/* HERO SECTION */
+.hero {
+  padding: 60px 20px;
+  text-align: center;
+  background: #e5ecf3;
+}
+.hero h1 {
+  font-size: 2.3rem;
+  margin-bottom: 10px;
+}
+.form-box {
+  margin-top: 20px;
+}
+input {
+  padding: 10px;
+  width: 410px;
+  max-width: 90%;
+  border-radius: 8px;
+  border: 1px solid #bbb;
+  font-size: 16px;
+}
+button {
+  padding: 12px 25px;
+  margin-left: 2px;
+  background: #14213d;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.bulk-result-box {
+  background-color: #f7faff;
+  border: 1px solid #cce0ff;
+  border-radius: 6px;
+  padding: 15px 20px;
+  max-width: 700px;
+  margin: 20px auto;
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 15px;
+  line-height: 1.7;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  overflow-x: auto;
+}
+
+.bulk-result-box .url-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px dashed #ddd;
+  padding: 6px 0;
+}
+
+.bulk-result-box .url {
+  word-break: break-word;
+  flex: 1;
+  color: #0f1c2e;
+}
+
+.bulk-result-box .status {
+  margin-left: 15px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.bulk-result-box .indexed {
+  color: #00b15d;
+}
+
+.bulk-result-box .not-indexed {
+  color: #e03e3e;
+}
+.result-card {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 30px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+  max-width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.result-card p {
+  margin: 0;
+  white-space: pre-line;
+}
+
+
+
+/* FEATURES + PRICING + FAQ */
+.feature-card, .plan-card {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+  color: #fff;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+}
+.feature-card:hover, .plan-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0,255,157,0.15);
+  border: 1px solid #00ff9d;
+}
+
+/* FAQ SECTION */
+.faq-section {
+  background: #ffffff;
+  padding: 60px 20px;
+}
+.faq-section h2 {
+  text-align: center;
+  font-size: 26px;
+  color: #0f172a;
+  margin-bottom: 35px;
+}
+.faq-inner {
+  max-width: 700px;
+  margin: 0 auto;
+  text-align: left;
+  font-size: 16px;
+  line-height: 1.6;
+}
+.faq-inner details {
+  background: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 15px 20px;
+  margin-bottom: 15px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+.faq-inner summary {
+  font-weight: 600;
+  color: #0f172a;
+  font-size: 16px;
+}
+.faq-inner p {
+  margin-top: 10px;
+  color: #1e293b;
+  line-height: 1.6;
+}
+
+/* FOOTER SECTION */
+.site-footer {
+  background: #111827;
+  color: #f1f5f9;
+  padding: 40px 20px 20px;
+  font-size: 14px;
+}
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+.footer-container > div {
+  flex: 1 1 250px;
+}
+.footer-container h3,
+.footer-container h4 {
+  margin-bottom: 15px;
+  color: #fff;
+}
+.footer-container p {
+  line-height: 1.6;
+  color: #cbd5e1;
+}
+.footer-container ul {
+  list-style: none;
+  padding: 0;
+}
+.footer-container ul li {
+  margin-bottom: 10px;
+}
+.footer-container a {
+  color: #90cdf4;
+  text-decoration: none;
+}
+.footer-bottom {
+  margin-top: 30px;
+  text-align: center;
+  color: #94a3b8;
+  font-size: 13px;
+  border-top: 1px solid #1e293b;
+  padding-top: 15px;
+}
+
+/* ===================== */
+/* MOBILE RESPONSIVE FIX */
+/* ===================== */
+@media (max-width: 768px) {
+
+  body {
+    padding: 0 2px;
+  }
+/* Only target the SIGN IN link inside the mobile menu */
+@media (max-width: 768px) {
+  .main-nav .mobile-signin-link {
+    color: #00ff9d !important;
+    font-weight: bold;
+  }
+}
+
+  header {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+    position: relative;
+  }
+
+  .top-row {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .hamburger {
+    display: block;
+    font-size: 26px;
+    color: white;
+    cursor: pointer;
+    position: relative;
+    z-index: 999;
+  }
+
+/* Mobile Menu */
+.nav-wrapper nav {
+  display: none;
+  flex-direction: row;   /* ✅ Horizontal layout */
+  flex-wrap: wrap;
+  gap: 14px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 12px;
+  background-color: #0f172a;
+  padding: 10px 0;
+  border-radius: 8px;
+  width: 110%;
+}
+
+
+  .nav-wrapper nav.show {
+    display: flex !important;
+  }
+
+  .nav-wrapper a {
+    text-align: center;
+    font-size: 13px;
+    padding: 8px 0;
+    color: white;
+    text-decoration: none;
+  }
+
+  .signin-wrapper {
+    display: none;
+    background-color:  #00ff9d;
+  }
+
+  .hero {
+    padding-bottom: 30px !important;
+  }
+
+  .hero h1 {
+    font-size: 1.5rem;
+  }
+
+  .form-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  input[type="text"],
+  input[type="file"],
+  button {
+    width: 100% !important;
+    max-width: 100%;
+    margin: 10px 0 !important;
+    font-size: 1rem;
+    padding: 12px;
+    border-radius: 8px;
+  }
+
+  button {
+    background-color: #0f172a;
+    font-weight: 600;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+
+  .feature-card,
+  .plan-card {
+    width: 90% !important;
+    margin: 10px auto;
+    padding: 1.3rem 1rem !important;
+    border-radius: 12px;
+  }
+
+  .feature-card h3,
+  .plan-card h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .feature-card p,
+  .plan-card p {
+    font-size: 0.95rem;
+    line-height: 1.4;
+  }
+
+  .faq-inner {
+    padding: 0 10px;
+  }
+
+  .faq-inner details {
+    font-size: 15px;
+  }
+
+  .footer-container {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .footer-container > div {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  footer {
+    padding-top: 30px !important;
+    padding-bottom: 30px !important;
+  }
+
+  .footer-bottom {
+    font-size: 12px;
+  }
+
+  footer img {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  footer span {
+    display: inline-block;
+    margin-top: 10px;
+  }
+}
+
+/* ===================== */
+/* DESKTOP DEFAULTS */
+/* ===================== */
+@media (min-width: 769px) {
+  .hamburger {
+    display: none;
+  }
+
+  .nav-wrapper {
+    display: flex !important;
+    position: static;
+    background: none;
+    padding: 0;
+  }
+
+  .nav-wrapper nav {
+    flex-direction: row !important;
+    gap: 1.5rem;
+    margin-top: 0;
+    background: none;
+    padding: 0;
+  }
+
+  .signin-wrapper {
+    display: block;
+  }
+}
+@media (max-width: 768px) {
+  footer {
+    padding: 40px 20px;
+    text-align: center;
+  }
+
+  footer .footer-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+  }
+
+  footer .footer-container > div {
+    width: 100%;
+    text-align: center;
+  }
+
+  footer h3, footer h4 {
+    font-size: 18px;
+    margin-bottom: 12px;
+  }
+
+  footer p, footer a, footer ul li {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  footer .footer-bottom {
+    font-size: 12px;
+    line-height: 1.5;
+    padding-top: 20px;
+  }
+
+  footer img {
+    display: inline-block;
+    margin: 4px;
+  }
+
+  footer span {
+    display: block;
+    margin-top: 10px;
+  }
+}
