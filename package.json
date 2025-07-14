@@ -1,5 +1,14 @@
 {
+  "name": "index-checker-app",
+  "version": "1.0.0",
+  "description": "Google Index Checker App",
+  "main": "backend/index.js",
+  "scripts": {
+    "start": "node backend/index.js"
+  },
   "dependencies": {
-    "sqlite3": "^5.1.7"
+    "express": "^4.18.2",
+    "sqlite3": "^5.1.7",
+    "cors": "^2.8.5"
   }
 }
