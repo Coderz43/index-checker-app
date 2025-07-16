@@ -1,5 +1,5 @@
-const sqlite3 = require("sqlite3").verbose();
-const db = new sqlite3.Database("indexchecker.db");
+const Database = require("better-sqlite3");
+const db = new Database("indexchecker.db");
 
 // ✅ Create table if it doesn't exist
 db.run(`

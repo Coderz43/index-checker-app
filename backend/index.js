@@ -1,7 +1,6 @@
 const express = require("express");
 const axios = require("axios");
 const cors = require("cors");
-const sqlite3 = require("sqlite3").verbose();
 const path = require("path");
 const multer = require("multer");
 const csv = require("csv-parser");
@@ -9,18 +8,23 @@ const fs = require("fs");
 const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
+const Database = require("better-sqlite3");
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 const upload = multer({ dest: "uploads/" });
 
-// ✅ DB Setup
-const dbPath = path.join(__dirname, "indexchecker.db");
-const db = new sqlite3.Database(dbPath, (err) => {
-  if (err) console.error("❌ DB error:", err.message);
-  else console.log("✅ SQLite connected");
+// ✅ Serve static frontend files
+app.use(express.static(path.join(__dirname, "../frontend")));
+
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "../frontend/index.html"));
 });
+
+// ✅ DB Setup
+const db = new Database(path.join(__dirname, "indexchecker.db"));
+console.log("✅ SQLite (better-sqlite3) connected");
 
 // ✅ Table Setup
 const createTables = [
@@ -59,9 +63,9 @@ const createTables = [
     token TEXT,
     created_at TEXT,
     is_verified INTEGER DEFAULT 0
-  );`
+  );`,
 ];
-createTables.forEach((q) => db.run(q));
+createTables.forEach((q) => db.prepare(q).run());
 
 // ✅ Google API Keys
 const apiKeys = [
@@ -69,7 +73,7 @@ const apiKeys = [
   "AIzaSyCdq8z-x1Wxrp18fpxwieAyyg_kSJzVL0o",
   "AIzaSyABYTe0XGeNosaz7S9fRbehVia18BPMy1s",
   "AIzaSyCOhvjUY8YSOfFRmOcSsu2KXoIsfrmMsU4",
-  "AIzaSyDYo3P31HA0uhuuOwWHhbtULdArm-U0p9U"
+  "AIzaSyDYo3P31HA0uhuuOwWHhbtULdArm-U0p9U",
 ];
 let keyIndex = 0;
 const cx = "3165d7296377e4016";
@@ -84,9 +88,12 @@ async function isIndexed(url) {
   while (attempts < apiKeys.length) {
     const key = getNextApiKey();
     try {
-      const res = await axios.get("https://www.googleapis.com/customsearch/v1", {
-        params: { key, cx, q: `site:${url}` },
-      });
+      const res = await axios.get(
+        "https://www.googleapis.com/customsearch/v1",
+        {
+          params: { key, cx, q: `site:${url}` },
+        },
+      );
       return res.data.items?.length > 0;
     } catch (err) {
       attempts++;
@@ -100,52 +107,59 @@ const transporter = nodemailer.createTransport({
   service: "Gmail",
   auth: {
     user: "your.email@gmail.com",
-    pass: "your_app_password_here"
-  }
+    pass: "your_app_password_here",
+  },
 });
 
 // ✅ Signup
 app.post("/signup", async (req, res) => {
   const { email, first_name, last_name, password } = req.body;
-  if (!email || !password) return res.status(400).json({ error: "Missing fields" });
+  if (!email || !password)
+    return res.status(400).json({ error: "Missing fields" });
 
   const hashedPassword = await bcrypt.hash(password, 10);
   const created_at = new Date().toISOString();
 
-  db.run(`INSERT INTO users (email, first_name, last_name, password, verified, created_at) 
-          VALUES (?, ?, ?, ?, 1, ?)`,
-    [email, first_name, last_name, hashedPassword, created_at],
-    function (err) {
-      if (err) return res.status(400).json({ error: "Email already exists" });
-      res.json({ message: "Signup successful (no email verification)" });
-    });
-});
+  db.prepare(
+    `INSERT INTO users (email, first_name, last_name, password, verified, created_at) 
+              VALUES (?, ?, ?, ?, 1, ?)`,
+  ).run(email, first_name, last_name, hashedPassword, created_at);
 
+  res.json({ message: "Signup successful (no email verification)" });
+});
 
 // ✅ Verify
 app.get("/verify/:token", (req, res) => {
   const { token } = req.params;
-  db.run(`UPDATE users SET verified = 1, verify_token = NULL WHERE verify_token = ?`, [token], function (err) {
-    if (err || this.changes === 0) return res.status(400).send("Invalid or expired token.");
-    res.redirect("/signin.html");
-  });
+  const result = db
+    .prepare(
+      `UPDATE users SET verified = 1, verify_token = NULL WHERE verify_token = ?`,
+    )
+    .run(token);
+  if (result.changes === 0)
+    return res.status(400).send("Invalid or expired token.");
+  res.redirect("/signin.html");
 });
 
 // ✅ Login
-app.post("/login", (req, res) => {
+app.post("/login", async (req, res) => {
   const { email, password } = req.body;
-  db.get(`SELECT * FROM users WHERE email = ?`, [email], async (err, user) => {
-    if (err || !user) return res.status(401).json({ error: "Invalid email" });
-    if (!user.verified) return res.status(403).json({ error: "Verify your email first" });
+  const user = db.prepare(`SELECT * FROM users WHERE email = ?`).get(email);
 
-    const match = await bcrypt.compare(password, user.password);
-    if (!match) return res.status(401).json({ error: "Wrong password" });
+  if (!user) return res.status(401).json({ error: "Invalid email" });
+  if (!user.verified)
+    return res.status(403).json({ error: "Verify your email first" });
 
-    const login_time = new Date().toISOString();
-    const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
-    db.run(`INSERT INTO logins (email, password, login_time) VALUES (?, ?, ?)`, [email, user.password, login_time]);
-    res.json({ message: "Login successful", redirect: "/index.html" });
-  });
+  const match = await bcrypt.compare(password, user.password);
+  if (!match) return res.status(401).json({ error: "Wrong password" });
+
+  const login_time = new Date().toISOString();
+  const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+  db.prepare(
+    `INSERT INTO logins (user_id, login_time, ip_address) VALUES (?, ?, ?)`,
+  ).run(user.id, login_time, ip);
+
+  res.json({ message: "Login successful", redirect: "/index.html" });
 });
 
 // ✅ Single Check
@@ -154,11 +168,13 @@ app.post("/check", async (req, res) => {
   const indexed = await isIndexed(url);
   const status = indexed ? "Indexed" : "Not Indexed";
   const checked_at = new Date().toISOString();
-  db.run(`INSERT INTO checks (url, status, checked_at) VALUES (?, ?, ?)`, [url, status, checked_at]);
+  db.prepare(
+    `INSERT INTO checks (url, status, checked_at) VALUES (?, ?, ?)`,
+  ).run(url, status, checked_at);
   res.json({ url, indexed, status, checked_at });
 });
 
-// ✅ Bulk Check (Smart Logic)
+// ✅ Bulk Check
 app.post("/bulk-check", async (req, res) => {
   const { urls, isCSV } = req.body;
   const checked_at = new Date().toISOString();
@@ -170,15 +186,13 @@ app.post("/bulk-check", async (req, res) => {
     const status = indexed ? "Indexed" : "Not Indexed";
 
     if (isCSV) {
-      db.run(
+      db.prepare(
         `INSERT INTO csv_checks (url, status, checked_at, batch_id) VALUES (?, ?, ?, ?)`,
-        [url, status, checked_at, batch_id]
-      );
+      ).run(url, status, checked_at, batch_id);
     } else {
-      db.run(
+      db.prepare(
         `INSERT INTO checks (url, status, checked_at) VALUES (?, ?, ?)`,
-        [url, status, checked_at]
-      );
+      ).run(url, status, checked_at);
     }
 
     results.push({ url, indexed });
@@ -195,13 +209,17 @@ app.post("/csv-upload", upload.single("file"), async (req, res) => {
 
   fs.createReadStream(filePath)
     .pipe(csv())
-    .on("data", row => { if (row.url) urls.push(row.url); })
+    .on("data", (row) => {
+      if (row.url) urls.push(row.url);
+    })
     .on("end", async () => {
       for (const url of urls) {
         const indexed = await isIndexed(url);
         const status = indexed ? "Indexed" : "Not Indexed";
         const checked_at = new Date().toISOString();
-        db.run(`INSERT INTO csv_checks (url, status, checked_at, batch_id) VALUES (?, ?, ?, ?)`, [url, status, checked_at, batch_id]);
+        db.prepare(
+          `INSERT INTO csv_checks (url, status, checked_at, batch_id) VALUES (?, ?, ?, ?)`,
+        ).run(url, status, checked_at, batch_id);
       }
       fs.unlinkSync(filePath);
       res.json({ message: "CSV uploaded and processed", batch_id });
@@ -209,4 +227,6 @@ app.post("/csv-upload", upload.single("file"), async (req, res) => {
 });
 
 // ✅ Start Server
-app.listen(5000, () => console.log("🚀 Server running at http://localhost:5000"));
+app.listen(5000, () => {
+  console.log("🚀 Server running at http://localhost:5000");
+});
